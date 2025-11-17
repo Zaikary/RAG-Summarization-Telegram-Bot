@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  telegram-bot:
+    build: .
+    container_name: rag-telegram-bot
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      # База данных (read-only)
+      - ./db.txt:/app/db.txt:ro
+
+      # FAISS индекс (персистентный)
+      - faiss_data:/app/faiss_index
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  faiss_data:
